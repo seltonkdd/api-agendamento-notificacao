@@ -23,13 +23,23 @@ def create_agendamento():
     db.session.close()
     return jsonify({'message': 'Agendamento efetuado com sucesso!'}), 201
 
+
 # endpoint consulta
 @app.route('/agendamento/<int:id>', methods=['GET'])
 def get_agendamento(id):
     agendamento = Agendamento.query.get_or_404(id)
     return jsonify(agendamento.as_dict())
 
+
 # endpoint cancelamento
+@app.route('/agendamento/<int:id>', methods=['DELETE'])
+def cancel_agendamento(id):
+    status = 'CANCELADO'
+    agendamento = Agendamento.query.get_or_404(id)
+    setattr(agendamento, 'status', status)
+    db.session.commit()
+
+    return jsonify(agendamento.as_dict()), 202
 
 
 if __name__ == '__main__':
