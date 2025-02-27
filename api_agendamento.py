@@ -34,9 +34,12 @@ def get_agendamento(id):
 # endpoint cancelamento
 @app.route('/agendamento/<int:id>', methods=['DELETE'])
 def cancel_agendamento(id):
-    status = 'CANCELADO'
+    data_hora = datetime.now()
+    dados = {'mensagem': 'Seu agendamento foi cancelado às ' + str(data_hora),
+             'status': 'CANCELADO'}
     agendamento = Agendamento.query.get_or_404(id)
-    setattr(agendamento, 'status', status)
+    for key, value in dados.items():
+        setattr(agendamento, key, value)
     db.session.commit()
 
     return jsonify(agendamento.as_dict()), 202
