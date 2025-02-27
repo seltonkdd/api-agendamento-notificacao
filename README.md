@@ -71,10 +71,10 @@ Assim que um agendamento for cancelado, será enviado o email notificando o canc
 
 >> ## Forneça email e senha para o login da biblioteca smtplib no arquivo `text_email.py`:
 
-```http
+
     USER_EMAIL = ''
     USER_PASSWORD = ''
-```
+
 
 > ## No terminal, execute o comando `python api_agendamento.py` 
 
