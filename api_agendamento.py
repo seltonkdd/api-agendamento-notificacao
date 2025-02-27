@@ -24,6 +24,10 @@ def create_agendamento():
     return jsonify({'message': 'Agendamento efetuado com sucesso!'}), 201
 
 # endpoint consulta
+@app.route('/agendamento/<int:id>', methods=['GET'])
+def get_agendamento(id):
+    agendamento = Agendamento.query.get_or_404(id)
+    return jsonify(agendamento.as_dict())
 
 # endpoint cancelamento
 
