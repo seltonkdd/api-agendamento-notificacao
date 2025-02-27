@@ -2,10 +2,18 @@ from flask import Flask, request, jsonify
 from db import db
 from datetime import datetime
 from models import Agendamento
+from text_email import send_email
+from threading import Thread
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///agendamentos.db"
 db.init_app(app)
+
+def send_email_async(email, message):
+    try:
+        send_email(email, message)
+    except Exception as e:
+        print(f'===!!! Falha no envio do email: {e} !!!===')
 
 # endpoint agendamento
 @app.route('/agendamento', methods=['POST'])
@@ -21,6 +29,10 @@ def create_agendamento():
     db.session.add(new_agendamento)
     db.session.commit()
     db.session.close()
+
+    thread = Thread(target=send_email_async, args=[dados['email_destinatario'], dados['mensagem']])
+    thread.start()
+
     return jsonify({'mensagem': 'Agendamento efetuado com sucesso!'}), 201
 
 
@@ -41,6 +53,9 @@ def cancel_agendamento(id):
     for key, value in dados.items():
         setattr(agendamento, key, value)
     db.session.commit()
+
+    thread = Thread(target=send_email_async, args=[agendamento.email_destinatario, dados['mensagem']])
+    thread.start()
 
     return jsonify(agendamento.as_dict()), 202
 
