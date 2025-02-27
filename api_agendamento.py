@@ -21,7 +21,7 @@ def create_agendamento():
     db.session.add(new_agendamento)
     db.session.commit()
     db.session.close()
-    return jsonify({'message': 'Agendamento efetuado com sucesso!'}), 201
+    return jsonify({'mensagem': 'Agendamento efetuado com sucesso!'}), 201
 
 
 # endpoint consulta

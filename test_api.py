@@ -31,7 +31,7 @@ def test_create_agendamento(client):
 
     assert response.status_code == 201
     assert 'mensagem' in data
-    assert data['mensagem'] == 'Agendamento criado com sucesso'
+    assert data['mensagem'] == 'Agendamento efetuado com sucesso!'
 
 
 def test_get_agendamento(client):
@@ -52,3 +52,23 @@ def test_get_agendamento(client):
     assert response.status_code == 200
     assert data['email_destinatario'] == 'test@example.com'
     assert data['status'] == 'AGENDADO'
+
+
+def test_cancel_agendamento(client):
+    """Teste para cancelar um agendamento"""
+    print("\n=== Teste: Cancelando um Agendamento ===")
+
+    # Criar um agendamento antes de cancelar
+    client.post('/agendamento', json={
+        'email_destinatario': 'teste@example.com',
+        'telefone_destinatario': 1199999999,
+        'mensagem': 'Teste de agendamento'
+    })
+
+    # Cancelar o agendamento
+    response = client.delete('/agendamento/1')
+    data = response.get_json()
+    print(f"Resposta da API após cancelamento: {data}")
+
+    assert response.status_code == 202
+    assert data['status'] == 'CANCELADO'
